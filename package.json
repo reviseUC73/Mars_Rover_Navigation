@@ -1,12 +1,12 @@
 {
-  "name": " QACK_SKILLS_Mars_Rover_Navigation",
+  "name": "QACK_SKILLS_Mars_Rover_Navigation",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "tsx watch src/main/main.ts",
-    "start": "tsx src/main/main.ts",
+    "dev": "tsx watch src/main.ts",
+    "start": "tsx src/main.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test:typecheck": "tsc -p tsconfig.test.json --noEmit",
     "build": "tsc -p tsconfig.json",
