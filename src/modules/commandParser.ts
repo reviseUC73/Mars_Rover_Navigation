@@ -14,17 +14,6 @@ export class CommandParser {
       }
       commands.push(char as Commands);
     }
-
     return commands;
-  }
-
-  //  Validate a command string without parsing
-  static isValid(commandString: string): boolean {
-    try {
-      this.parse(commandString);
-      return true;
-    } catch {
-      return false;
-    }
   }
 }
