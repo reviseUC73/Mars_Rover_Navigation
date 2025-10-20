@@ -33,14 +33,14 @@ The solution uses **three design patterns** working together:
 - [🧱 Project Description](#-project-description)
 - [🛠 Problem Statement](#-problem-statement)
 - [📦 Solution Implemented](#-solution-implemented)
-- [🧱 Design Goals](#-design-Goals)
+- [🧱 Design Goals](#-design-goals)
 - [📁 Project Structure](#project-structure)
 - [🎨 Design Patterns](#design-patterns)
   - [🏭 Factory Pattern](#-factory-pattern)
   - [🎯 Strategy Pattern](#-strategy-pattern)
   - [📋 Command Pattern](#-command-pattern)
 - [🧭 Flowchart](#-flowchart)
-- [🏗 Architecture Flow](#architecture-flow)
+- [🏗 System Architecture Diagram And Architecture Flow](#system-architecture-diagram-and-architecture-flow)
 - [✨ Features](#features)
 - [⚙️ Installation Instructions](#installation-instructions)
 - [🚀 Usage Instructions](#usage-instructions)
@@ -229,18 +229,38 @@ export class NavigationCommand {
 ## 🧭 Flowchart
 
 ```mermaid
-flowchart TD
-  A[Command string] -->|parse| B[CommandParser]
-  B --> C[Commands[]]
-  C --> D[NavigationCommand (Command Pattern)]
-  D --> E{Factory}
-  E --> F[TurnLeftCommand]
-  E --> G[TurnRightCommand]
-  E --> H[MoveCommand]
-  F --> I[Rover]
-  G --> I
-  H --> I
-  I -->|uses| J[Grid]
+---
+config:
+  theme: mc
+  layout: elk
+  look: classic
+---
+flowchart BT
+ subgraph Parsing["Parsing"]
+        B["CommandParser"]
+        A["Command string"]
+        C["Commands[]"]
+  end
+ subgraph Execution["Execution"]
+        D["NavigationCommand"]
+        E{"CommandFactory"}
+        I["Rover"]
+        F["TurnLeftCommand"]
+        G["TurnRightCommand"]
+        H["MoveCommand"]
+        J["Grid"]
+  end
+    A -- parse --> B
+    B --> C
+    C --> D
+    D -- uses --> E
+    D -- orchestrates --> I
+    E -- creates --> F & G & H
+    F -- executes on --> I
+    G -- executes on --> I
+    H -- executes on --> I
+    I -- uses --> J
+
 ```
 
 * **CommandParser**: validates and normalizes the command string to `Commands[]` (e.g., `"lMr" → ["L","M","R"]`).
@@ -250,7 +270,11 @@ flowchart TD
 * **Rover**: holds mutable state (position, direction) and knows how to move/turn within a **Grid**.
 * **Grid**: bounds + obstacle map.
 
-## Architecture Flow
+## System Architecture Diagram And Architecture Flow
+<div align="center" style="border: 3px solid #ccc; border-radius: 10px; padding: 10px; background-color: #fafafa;">
+  <img width="1845" height="620" alt="System Architecture Diagram" src="https://github.com/user-attachments/assets/a1db2b3c-72bc-4a3b-a1f7-05834b482042" />
+</div>
+
 
 ```bash
 navigate_rover(grid_size, obstacles, commands)
@@ -283,6 +307,39 @@ Return: { final_position, final_direction, status }
 3.  **Parse Commands**
     -   Convert the command string (e.g., `"LMRMM"`) into a list of
         discrete commands: `['L', 'M', 'R', 'M', 'M']`.
+## UML Sequence Diagram
+```mermaid
+sequenceDiagram
+  participant Client as NavigationCommand
+  participant Factory as CommandFactory
+  participant Strat as CommandStrategy
+  participant Rover as Rover
+  participant Grid as Grid
+
+  loop For each command
+    Client->>Factory: createCommand(cmd)
+    Factory-->>Client: CommandStrategy
+    Client->>Strat: execute(rover)
+    Strat->>Rover: turn/move
+    Rover->>Grid: inBounds()/hasObstacles()
+    Grid-->>Rover: result
+    Rover-->>Strat: status?
+    Strat-->>Client: status? (optional)
+  end
+  Client-->>Client: return Result
+```
+The diagram below illustrates the **execution flow of commands** in the Mars Rover Navigation System.\
+It shows how the **Command Pattern**, **Factory Pattern**, and **Strategy Pattern** collaborate during navigation.
+
+-   `NavigationCommand` acts as the **invoker**, orchestrating the process.
+
+-   `CommandFactory` dynamically creates the appropriate **command strategy** (`L`, `R`, or `M`).
+
+-   Each **CommandStrategy** executes on the `Rover`, which interacts with the `Grid` to validate boundaries and obstacles.
+
+-   The loop continues until all commands are processed or an error (e.g., obstacle/boundary) occurs.
+
+-   Finally, `NavigationCommand` returns the **final position, direction, and status** of the rover.
 
 ## Features
 
@@ -460,7 +517,7 @@ All tests should pass with output similar to:
 ✓ Rover Tests (17 tests)
 
 Test Files  7 passed (7)
-Tests  167 passed (105)
+Tests  105 passed (105)
 ```
 
 
