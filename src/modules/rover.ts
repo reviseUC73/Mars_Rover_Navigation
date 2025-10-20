@@ -1,9 +1,9 @@
-import type { Directions, Positon, RoverStatus } from "./type.js";
+import type { Directions, Position, RoverStatus } from "./type.js";
 import type { Grid } from "./grid.js";
 
 // Handles position, direction, and movement logic on grid
 export class Rover {
-  private currentPositon: Positon;
+  private currentPositon: Position;
   private currentDirection: Directions;
   private grid: Grid;
   private readonly leftDirectionMap: Record<Directions, Directions> = {
@@ -19,7 +19,7 @@ export class Rover {
     E: "S",
   };
   constructor(
-    currentPositon: Positon = [0, 0],
+    currentPositon: Position = [0, 0],
     currentDirection: Directions = "N",
     grid: Grid
   ) {
@@ -28,7 +28,7 @@ export class Rover {
     this.grid = grid;
   }
 
-  getPositon(): Positon {
+  getPositon(): Position {
     return this.currentPositon;
   }
 
@@ -46,7 +46,7 @@ export class Rover {
 
   move(): void | RoverStatus {
     const nextPosition = this.movePostion(this.currentPositon,this.currentDirection)
-    
+
     if(this.grid.hasObstacles(nextPosition)){
         return "Obstacle encountered"
     }
@@ -56,13 +56,13 @@ export class Rover {
     this.currentPositon = nextPosition
   }
 
-  private movePostion(position: Positon, direction: Directions): Positon {
+  private movePostion(position: Position, direction: Directions): Position {
     const [x, y] = position;
     const [dx, dy] = this.toDirection(direction);
     return [x + dx, y + dy];
   }
 
-  private toDirection(targetDirection: Directions): Positon {
+  private toDirection(targetDirection: Directions): Position {
     switch (targetDirection) {
       case "N":
         return [0, 1];

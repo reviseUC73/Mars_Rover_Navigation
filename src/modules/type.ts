@@ -1,4 +1,13 @@
 export type Commands = "L" | "R" | "M";
 export type Directions = "N" | "E" | "S" | "W";
-export type Positon = [number, number];
+export type Position = [number, number];
 export type RoverStatus = "Success" | "Obstacle encountered" | "Out of bounds";
+export type Result = {
+  final_position: Position;
+  final_direction: Directions;
+  status: RoverStatus;
+};
+export type MovementResult = {
+  success: boolean;
+  reason?: "obstacle" | "out_of_bounds";
+};
