@@ -19,16 +19,16 @@ export class Rover {
     E: "S",
   };
   constructor(
+    grid: Grid,
     currentPositon: Position = [0, 0],
-    currentDirection: Directions = "N",
-    grid: Grid
+    currentDirection: Directions = "N"
   ) {
     this.currentDirection = currentDirection;
     this.currentPositon = currentPositon;
     this.grid = grid;
   }
 
-  getPositon(): Position {
+  getPosition(): Position {
     return this.currentPositon;
   }
 
@@ -36,7 +36,7 @@ export class Rover {
     return this.currentDirection;
   }
 
-  turnLeft(): void{
+  turnLeft(): void {
     this.currentDirection = this.leftDirectionMap[this.currentDirection];
   }
 
@@ -45,15 +45,17 @@ export class Rover {
   }
 
   move(): void | RoverStatus {
-    const nextPosition = this.movePostion(this.currentPositon,this.currentDirection)
+    const nextPosition = this.movePostion(
+      this.currentPositon,
+      this.currentDirection
+    );
 
-    if(this.grid.hasObstacles(nextPosition)){
-        return "Obstacle encountered"
+    if (this.grid.hasObstacles(nextPosition)) {
+      return "Obstacle encountered";
+    } else if (!this.grid.inBounds(nextPosition)) {
+      return "Out of bounds";
     }
-    else if(!this.grid.inBounds(nextPosition)){
-        return "Out of bounds"
-    }
-    this.currentPositon = nextPosition
+    this.currentPositon = nextPosition;
   }
 
   private movePostion(position: Position, direction: Directions): Position {
