@@ -1,4 +1,4 @@
-export type Command = "L" | "R" | "M";
-export type Direction = "N" | "E" | "S" | "W";
+export type Commands = "L" | "R" | "M";
+export type Directions = "N" | "E" | "S" | "W";
 export type Positon = [number, number];
-export type Status = "Success" | "Obstacle encountered" | "Out of bounds";
+export type RoverStatus = "Success" | "Obstacle encountered" | "Out of bounds";
