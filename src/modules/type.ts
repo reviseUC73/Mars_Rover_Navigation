@@ -7,7 +7,3 @@ export type Result = {
   final_direction: Directions;
   status: RoverStatus;
 };
-export type MovementResult = {
-  success: boolean;
-  reason?: "obstacle" | "out_of_bounds";
-};
